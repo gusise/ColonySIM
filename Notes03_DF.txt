@@ -1,0 +1,60 @@
+//Agent list
+DF1 - Shows simple registration to DF
+DF2 - Shows registration to DF with adding a service description
+SearchDF1 - 
+SearchDF2 - contains 3 generally useful utility methods to access the DF. 
+	1) An expanded register method which tests and removes old duplicate DF entries before adding a new one. 
+	2) Utility search methods based on a ServiceType String which return either ONE or ALL matching agents. 
+
+
+DIRECTORY FACILITATOR (DF) - dzeltenas lapas
+
+Agents wishing to advertize their services register with the DF. 
+Visiting agents can then ask (search) the DF looking for agents which provide the services they desire. 
+
+DFAgentDescription (DFD) data structure, is used both for ADDING an entry or SEARCHING for services.
+
+Registering = ADDING an entry -> provide complete description, + AID.
+
+Searching = SEARCHING for an entry -> provide partial description, - AID. 
+	returns array of complete entries (+ AIDs) whose attributes match the description.
+
+DFD Structure in full:
+DFAgentDescription
+    Name:     AID					//  Required for registration 
+    Protocols:   set of Strings
+    Ontologies:  set of Strings
+    Languages:   set of Strings
+    Services:    set of {
+      { Name:   String				//  Required for each service specified
+        Type:   String				//  Required ...
+        Owner:  String
+        Protocols:   set of Strings
+        Ontologies:  set of Strings
+        Languages:   set of Strings
+        Properties: set of
+          { Name:   String
+            Value:  String
+          }
+      }
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      

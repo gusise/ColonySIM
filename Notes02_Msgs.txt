@@ -1,0 +1,116 @@
+// Agent list
+Receiver - Demonstrates receiving messages (prints all received messages)
+Pong - Replies all msgs with a "Pong" message.
+Sender - Sends out "Ping" msg at regular intervals.
+AMSDump - Shows how to get all Agents registered at AMS
+Comm1 - Shows how to send to all relevant agents and receive back
+Comm2 - Shows how to create an agent inside an agent
+
+
+JADE MESSAGES
+
+ACL standard -> FIPA's SL (Semantic Language). LISP-like encoding of concepts, actions and predicates
+	+ Performative: 	FIPA message type (INFORM, QUERY, PROPOSE, ...)
+	+ Addressing:		Receiver (manual) / Sender (automatic)
+	+ Content:			Main content of message
+	+ ConversationID:	Used to link messages in the same conversation
+	
+	? Language: 	Specifies which language is used in the content.
+	? Ontology: 	Specifies which ontology is used in the content.
+	
+	? Protocol: 	Specifies the protocol
+	? ReplyWith:	Another field to help distinguish answers
+	? InReplyTo:	Sender uses to help distinguish answers
+	? ReplyBy:		Used to set a time limit on an answer
+
+Workflow:
+
+SENDING:
+indicate type (PERFORMATIVE) 
+	INFORM:		give some useful information
+	QUERY:		ask a question
+	REQUEST:	ask to do something
+	PROPOSE:	start bargaining
+	
+	AGREE: 		answer performatives
+	REFUSE:
+and set content (CONTENT):
+	ACLMessage msg = new ACLMessage( ACLMessage.INFORM );
+	msg.setContent("I sell seashells");	
+if you have AgentID:
+	AID dest = ...;
+	msg.addReceiver( dest );  //no set, because you can ADD MULTIPLE RECEIVERS
+	send(msg);
+	
+RECEIVING:
+	blockingReceive() - suspends all activities until a message arrives !- check doc for more options like specific type / timeout
+		ACLMessage msg = blockingReceive();
+	receive() - examines msg que, returns a message if there is one or null otherwise. (for parallel B's)
+		ACLMessage msg = receive();
+
+ANSWERING:
+	ACLMessage msg = receive();
+	ACLMessage reply = new ACLMessage( ACLMessage.INFORM );
+	reply.setContent( "Pong" );
+	reply.addReceiver( msg.getSender() ); // this is where you extract sender
+	send(reply);
+or
+	ACLMessage reply = msg.createReply(); // sets receiver, ontology and conversationID
+	reply.setPerformative( ACLMessage.INFORM );
+	reply.setContent(" Pong" );
+	send(reply);
+
+FINDING AGENTS TO TALK TO:
+if known naming scheme (KA1, KA2, KA3...):
+	ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+	msg.setContent( " xd " );
+	for(int i = 1; i<=3; i++)
+		msg.addReceiver( new AID("KA"+i, AID.ISLOCALNAME) );
+	send(msg);
+	
+you can get agent IDs:
+	1) using JADE's GUI interface
+	2) from a directory entry in the DF (normal method)
+	3) from AMS (Agent Management Service) which keep the IDs of all active agents
+	
+USING AMS:
+	1) create new set of constraints for search:
+	2) select # of agents to add to results (-1 = all):  
+	3) parameters - [searching agents, an AgentDescription which could be used to filter agents, constraints]:
+		SearchConstraints c = new SearchConstraints();
+		c.setMaxResults ( new Long(-1) );
+	    agents = AMSService.search( this, new AMSAgentDescription (), c );
+	
+MESSAGE FILTERING with TEMPLATES: (3.3.4. of Programmers Guide)
+	+ MatchPerformative( perf ), where perf = ACLMessage.INFORM / PROPOSE / AGREE / etc..
+	+ MatchSender( AID )
+	+ MatchConversationID( String )	// useful for parallel negotiations
+	+ and( T1, T2 )
+	+ or( T1, T2)
+	+ not( T )
+	
+	? MatchProtocol( String )
+	? MatchOntology( String )
+example:
+	MessageTemplate mt = 
+		MessageTemplate.and(
+			MessageTemplate.MatchPerformative( ACLMessage.INFORM),
+			MessageTemplate.MatchSender( new AID( "a1", AID.ISLOCALNAME)));
+	...		
+	ACLMessage msg = receive( mt );
+	if(msg !- null){ ... handle message }
+	block();
+
+
+
+
+
+
+
+
+
+
+
+
+
+

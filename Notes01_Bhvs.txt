@@ -1,0 +1,75 @@
+//Agent list
+myAgent - Demonstrates self pass. Does nothing
+Simple0 - Calls B1 infinitely untill CTRL+C or Kill
+Simple1 - Demonstrates Anonymous B. Adds an end condition to B.
+ParamAgent - Demonstrates receiving parameters.
+Agent1 - Demonstrates PARALLEL Behaviours. Implements B in Looper.java.
+Agent2 - Shows 2 sequential steps of B in 2 seperate B. (one B calls another).
+Agent3 - Proper 2 step B, using switch-case.
+
+Sequence - sequencial behaviours w.r.t. absolute time (A w. 250 & B w. 750 -> A after 250 then B 500 after A)
+Sequence1 - sequancial behaviour w.r.t. relative time (A w. 250 & B w. 500 -> A after 250 then B 500 after A)
+
+
+Call agents in seperate containers
+java -classpath "C:\Users\BIGBOI\eclipse-workspace\masys\bin;C:\Users\BIGBOI\eclipse-workspace\masys\jade.jar" jade.Boot3 -gui
+java -classpath "C:\Users\BIGBOI\eclipse-workspace\masys\bin;C:\Users\BIGBOI\eclipse-workspace\masys\jade.jar" jade.Boot3 -container frank:agents.Simple1
+java -classpath "C:\Users\BIGBOI\eclipse-workspace\masys\bin;C:\Users\BIGBOI\eclipse-workspace\masys\jade.jar" jade.Boot3 -container joemama:agents.Simple1
+
+Pass parameters
+java -classpath "C:\Users\BIGBOI\eclipse-workspace\masys\bin;C:\Users\BIGBOI\eclipse-workspace\masys\jade.jar" jade.Boot3 -container fred:agents.ParamAgent(1 'Hi there')
+
+BEHAVIOURS
+	A behaviour an Event Handler - a method which describes how an agent reacts to an event. 
+	Event - relevant change of state; in practice - reception of a message or a Timer interrupt. 
+	In Jade, Behaviours are classes and the Event Handler code is placed in a method called action. 
+	! Each Behaviour execution corresponds to ONE SINGLE instantaneous active phase !
+	To implement long-term activities like a negotiation, we have to provide as many different Behaviours 
+	as there are active phases in the activity.
+
+block(dt):
+	> doesn't block - it sets a delay for next execution of the behaviour (next time action() will be called)
+	> if done() returns true, block does nothing.
+	> only first call sets delay - subsequent calls do nothing
+	
+types:
+PRIMITIVE:
+	SimpleBehaviour - the most basic behaviour, can be upgraded as pleased (use this when others have random quirks)
+	CyclicBehaviour - stays active as long as agent is alive (good for msg handling)
+		TickerBehaviour - happens every T seconds
+	OneShotBehaviour - executes once and dies
+		WakerBehaviour - happens after set delay (from CREATION)
+		ReceiverBehaviour - triggers when a given type of messaage is received (or a timeout expires)
+Note: Cyclic and OneShot are implemented from basic
+		
+COMPOSITE:
+	ParallelBehaviour - controls a set of children behaviours that execute in parallel. Teminates when ALL / N / ANY child is DONE
+	SequentialBehaviour - executes its children behaviours one after the other, terminates when the last child has ended.
+	
+ADDITIONAL:
+	ReceiverBehaviour - waits until either the required message arrives or a specified delay has passed with a timeout mechanism
+	
+CUSTOM:
+	DelayBehaviour - happens after a set delay (FROM START of ACTION)
+	SendPings - sends pings with set interval (uses onTickBehaviour)
+	
+ADD and REMOVE Behaviours:
+in Agent:
+    void addBehaviour( Behaviour )
+    void removeBehaviour( Behaviour )
+in CompositeBehaviour
+    void addSubBehaviour( Behaviour )
+    void removeSubBehaviour( Behaviour )
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+ 

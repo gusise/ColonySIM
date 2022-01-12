@@ -1,0 +1,68 @@
+CONVERSATIONS
+
+1) assign each convo a unique id: ( createReply() does that automatically )
+	conversationID (CID)
+2) passing this ID to all Behaviours involved in a conversation
+
+Typically, implement conversations as Sequential behaviours whose sequence of steps is specified via the action methods of anonymous subBehaviours.
+
+
+HELP METHODS:
+// ----------------- Messages Creation Methods -----------------------------
+
+	ACLMessage newMsg( int perf, ContentElement content)
+	{
+		return newMsg( perf, content, null) ;
+	}
+
+	ACLMessage newMsg( int perf, String content)
+	{
+		return newMsg( perf, content, null) ;
+	}
+
+	ACLMessage newMsg( int perf, ContentElement ce, AID dest)
+	{
+		ACLMessage msg = newMsg(perf);
+		if (dest != null) msg.addReceiver( dest );
+		msg.setLanguage(codec.getName());
+		msg.setOntology(ontology.getName());
+		try {
+			manager.fillContent( msg, ce );
+		}
+		catch (Exception e) {
+			System.out.println("Problem filling with: " + ce);
+			e.printStackTrace();
+		}
+		return msg;
+	}
+
+	ACLMessage newMsg( int perf, String content, AID dest)
+	{
+		ACLMessage msg = newMsg(perf);
+		if (dest != null) msg.addReceiver( dest );
+		msg.setContent( content );
+		return msg;
+	}
+
+	ACLMessage newMsg( int perf)
+	{
+		ACLMessage msg = new ACLMessage(perf);
+		msg.setConversationId( genCID() );
+		return msg;
+	}
+
+// -------------------------------------------------------------------------
+//     Generating unique ConversationIDs
+// -------------------------------------------------------------------------
+	
+	protected static int cidCnt = 0;
+   String cidBase ;
+   
+   String genCID() 
+   { 
+      if (cidBase==null) {
+         cidBase = getLocalName() + hashCode() +
+                      System.currentTimeMillis()%10000 + "_";
+      }
+      return  cidBase + (cidCnt++); 
+   }
