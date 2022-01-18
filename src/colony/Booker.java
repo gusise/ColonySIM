@@ -127,8 +127,8 @@ public class Booker extends Agent implements ColonyVocabulary {
 		@Override
 		public void action() {
 
-			// Collect maps from workers every 6 seconds
-			TickerBehaviour updateMap = new TickerBehaviour(myAgent, 10 * 1000) {
+			// Collect maps from workers every 8 seconds
+			TickerBehaviour updateMap = new TickerBehaviour(myAgent, 8 * 1000) {
 
 				protected void onTick() {
 
@@ -241,7 +241,7 @@ public class Booker extends Agent implements ColonyVocabulary {
 			MessageTemplate template = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.INFORM),
 					MessageTemplate.MatchConversationId(msg.getConversationId()));
 
-			addSubBehaviour(new myReceiver(myAgent, 2 * 2000, template) {
+			addSubBehaviour(new myReceiver(myAgent, 6 * 1000, template) {
 
 				public void handle(ACLMessage msg) {
 
@@ -322,7 +322,7 @@ public class Booker extends Agent implements ColonyVocabulary {
 		}
 
 		public void action() {
-			// System.out.println(myAgent.getLocalName() + " <- content: " + content);
+			System.out.println(myAgent.getLocalName() + " <- content: " + content);
 			String[] req = content.split("#");
 			int req_key = Integer.parseInt(req[0]);
 			printRequest(req_key, msg);
@@ -351,7 +351,6 @@ public class Booker extends Agent implements ColonyVocabulary {
 			default:
 				break;
 			}
-			addBehaviour(new CalculateResult());
 		}
 
 	} // --- Answer class ---
@@ -382,6 +381,7 @@ public class Booker extends Agent implements ColonyVocabulary {
 		SpeechMap.put(GIVE_TASK, "GIVE_TASK");
 		SpeechMap.put(FAILURE, "FAILURE");
 		SpeechMap.put(SUCCESS, "SUCCESS");
+		SpeechMap.put(DEPOSIT_RESOURCES, "DEPOSIT_RESOURCES");
 
 		// Tasks
 		SpeechMap.put(STARTUP, "STARTUP");

@@ -161,7 +161,7 @@ public class Leader extends Agent implements ColonyVocabulary {
 		public void action() {
 
 			// Collect maps from workers every 6 seconds
-			TickerBehaviour updateMap = new TickerBehaviour(myAgent, 2 * 1000) {
+			TickerBehaviour updateMap = new TickerBehaviour(myAgent, 1 * 1000) {
 
 				protected void onTick() {
 
@@ -204,11 +204,7 @@ public class Leader extends Agent implements ColonyVocabulary {
 				}
 			};
 
-			// All LOOP actions
-			ParallelBehaviour allActions = new ParallelBehaviour(ParallelBehaviour.WHEN_ALL);
-			allActions.addSubBehaviour(updateMap);
-
-			addBehaviour(allActions);
+			addBehaviour(updateMap);;
 		}
 
 	}

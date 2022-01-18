@@ -470,7 +470,7 @@ public class Worker extends Agent implements ColonyVocabulary {
 			MessageTemplate template = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.INFORM),
 					MessageTemplate.MatchConversationId(msg.getConversationId()));
 
-			addBehaviour(new myReceiver(myAgent, 2 * 1000, template) {
+			addBehaviour(new myReceiver(myAgent, 4 * 1000, template) {
 
 				public void handle(ACLMessage msg) {
 
@@ -870,6 +870,7 @@ public class Worker extends Agent implements ColonyVocabulary {
 		SpeechMap.put(GIVE_TASK, "GIVE_TASK");
 		SpeechMap.put(FAILURE, "FAILURE");
 		SpeechMap.put(SUCCESS, "SUCCESS");
+		SpeechMap.put(DEPOSIT_RESOURCES, "DEPOSIT_RESOURCES");
 
 		// Tasks
 		SpeechMap.put(STARTUP, "STARTUP");
